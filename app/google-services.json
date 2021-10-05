@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "920713972786",
+    "project_id": "kouos-8ba21",
+    "storage_bucket": "kouos-8ba21.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:920713972786:android:7e5a6771cb882a8d34002b",
+        "android_client_info": {
+          "package_name": "com.muhammetbaytar.kouos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "920713972786-uo0eljppc67bq2642076cn2mek5i5aai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAimsfDzFYFOCrIsEJb2-U71i7f78VRFX8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "920713972786-uo0eljppc67bq2642076cn2mek5i5aai.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

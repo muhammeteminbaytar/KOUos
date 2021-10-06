@@ -1,10 +1,11 @@
-package com.muhammetbaytar.kouos
+package com.muhammetbaytar.kouos.view
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import com.muhammetbaytar.kouos.R
 
 class SplashScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

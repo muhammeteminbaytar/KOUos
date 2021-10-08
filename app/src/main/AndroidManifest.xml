@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.muhammetbaytar.kouos">
 
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,9 +11,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KOUos">
-        <activity android:name=".view.RegisterScreen"></activity>
-        <activity android:name=".view.LoginScreen" />
-        <activity android:name=".view.SplashScreen">
+        <activity
+            android:name=".view.CatacoriesScreen"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".view.RegisterScreen"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.LoginScreen"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.SplashScreen"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

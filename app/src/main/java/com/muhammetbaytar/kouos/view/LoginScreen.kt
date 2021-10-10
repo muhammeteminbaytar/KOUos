@@ -31,6 +31,11 @@ class LoginScreen : AppCompatActivity() {
         binding.btnNewSignIn.setOnClickListener { signBtnClick() }
         currentUserControl()
 
+        binding.txtForgotPass.setOnClickListener {
+            val intent = Intent(this, ForgotPassScreen::class.java)
+            startActivity(intent)
+        }
+
     }
 
     fun currentUserControl() {

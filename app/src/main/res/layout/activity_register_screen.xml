@@ -445,7 +445,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_uni_lay"
                 app:passwordToggleTint="#717171"
-                app:startIconDrawable="@drawable/ic_school">
+                app:startIconDrawable="@drawable/ic_faculty">
 
                 <AutoCompleteTextView
                     android:id="@+id/fac_auto_complete"
@@ -481,7 +481,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_fac_lay"
                 app:passwordToggleTint="#717171"
-                app:startIconDrawable="@drawable/ic_school">
+                app:startIconDrawable="@drawable/ic_dep">
 
                 <AutoCompleteTextView
                     android:id="@+id/dep_auto_complete"

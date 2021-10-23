@@ -1,10 +1,15 @@
 package com.muhammetbaytar.kouos.view
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.DatePicker
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -12,6 +17,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.muhammetbaytar.kouos.R
 import com.muhammetbaytar.kouos.databinding.ActivityRegisterScreenBinding
+import java.util.*
+import kotlin.collections.ArrayList
 
 class RegisterScreen : AppCompatActivity() {
     lateinit var binding: ActivityRegisterScreenBinding
@@ -31,17 +38,17 @@ class RegisterScreen : AppCompatActivity() {
         getFireBaseDataOnce()
         registerBtnControl()
         facClickControl()
+        dateClickOpen()
     }
 
     fun registerBtnControl() {
         // kayıt ol butonu fonk.
         binding.btnRegister.setOnClickListener {
-            var email = binding.txtEmail.text.toString()
-            var pass = binding.txtSifre.text.toString()
-            if (email.isEmpty() || pass.isEmpty()) {
-                Toast.makeText(this, "Zorunlu alanlar boş bırakılamaz !", Toast.LENGTH_LONG).show()
-            } else {
+            if (emptyControl()) {
+                var email = binding.txtEmail.text.toString()
+                var pass = binding.txtSifre.text.toString()
                 auth.createUserWithEmailAndPassword(email, pass).addOnSuccessListener {
+                    saveFirestoreUsers()
                     Toast.makeText(this, "Kayıt Başarılı", Toast.LENGTH_LONG).show()
                     val intent = Intent(this, LoginScreen::class.java)
                     startActivity(intent)
@@ -98,6 +105,22 @@ class RegisterScreen : AppCompatActivity() {
             }
     }
 
+    fun dateClickOpen() {
+        binding.textInputLayout9.setStartIconOnClickListener {
+            val c = Calendar.getInstance()
+            val year = c.get(Calendar.YEAR)
+            val mouth = c.get(Calendar.MONTH)
+            val day = c.get(Calendar.DAY_OF_MONTH)
+
+            val dpd = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view: DatePicker,
+                                                                                  mYear: Int, mMonth: Int, mDay: Int ->
+                binding.txtDogumtarihi.setText("" + mDay + "/" + mMonth + "/" + mYear)
+            }, year, mouth, day)
+            dpd.show()
+
+        }
+    }
+
     fun getDepartment(uniId: String, facIds: ArrayList<String>) {
         for (facId in facIds) {
             db.collection("University/${uniId}/Faculty/${facId}/Department")
@@ -129,14 +152,78 @@ class RegisterScreen : AppCompatActivity() {
 
             var editedArray = ArrayList<String>()
 
-            var idVal=id.toString().toInt()
+            var idVal = id.toString().toInt()
 
-                    for (i in (idVal*5)..((idVal*5)+4)) {
-                        editedArray.add(depArray[i])
-                    }
+            for (i in (idVal * 5)..((idVal * 5) + 4)) {
+                editedArray.add(depArray[i])
+            }
 
             val arrayAdapter = ArrayAdapter(this, R.layout.uni_dropdown_item, editedArray)
             binding.depAutoComplete.setAdapter(arrayAdapter)
         }
+
+        binding.facAutoComplete.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                binding.depAutoComplete.text.clear()
+            }
+
+        })
+    }
+
+    fun saveFirestoreUsers() {
+        val userMap = hashMapOf<String, Any>()
+        auth.currentUser?.let { userMap.put("userId", it.uid) }
+        userMap.put("userAdSoyad", binding.txtIsim.text.toString())
+        userMap.put("userOgrenciNo", binding.txtOgrno.text.toString())
+        userMap.put("userKimlikNo", binding.txtKimlikno.text.toString())
+        userMap.put("userTel", binding.txtTel.text.toString())
+        userMap.put("userAdres", binding.txtAdres.text.toString())
+        userMap.put("userSinif", binding.txtSinif.text.toString())
+        userMap.put("userDtarih", binding.txtDogumtarihi.text.toString())
+        userMap.put("userUni", binding.uniAutoComplete.text.toString())
+        userMap.put("userFak", binding.facAutoComplete.text.toString())
+        userMap.put("userDep", binding.depAutoComplete.text.toString())
+
+        db.collection("Users").add(userMap).addOnCompleteListener { task ->
+        }.addOnFailureListener { exception ->
+            Toast.makeText(
+                applicationContext,
+                exception.localizedMessage.toString(),
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    fun emptyControl(): Boolean {
+        val editTextArray = listOf(
+            binding.txtEmail,
+            binding.txtSifre,
+            binding.txtIsim,
+            binding.txtDogumtarihi,
+            binding.txtAdres,
+            binding.txtKimlikno,
+            binding.txtOgrno,
+            binding.txtSinif,
+            binding.txtTel,
+            binding.uniAutoComplete,
+            binding.depAutoComplete,
+            binding.facAutoComplete
+        )
+
+        for (text_widget in editTextArray) {
+            if (text_widget.text.toString().isEmpty()) {
+                Toast.makeText(this, "Tüm Alanlar Eksiksiz Doldurulmalıdır.", Toast.LENGTH_LONG)
+                    .show()
+                return false
+                break
+            }
+        }
+        return true
     }
 }

@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -16,6 +17,8 @@ class RegisterScreen : AppCompatActivity() {
     lateinit var binding: ActivityRegisterScreenBinding
     private lateinit var auth: FirebaseAuth
     val db = FirebaseFirestore.getInstance()
+    var depArray = ArrayList<String>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // setContentView(R.layout.activity_register_screen)
@@ -27,6 +30,7 @@ class RegisterScreen : AppCompatActivity() {
         auth = Firebase.auth
         getFireBaseDataOnce()
         registerBtnControl()
+        facClickControl()
     }
 
     fun registerBtnControl() {
@@ -52,7 +56,7 @@ class RegisterScreen : AppCompatActivity() {
     }
 
     fun getFireBaseDataOnce() {
-        var itemArray=ArrayList<String>()
+        var itemArray = ArrayList<String>()
         db.collection("University").addSnapshotListener { value, error ->
             if (error != null) {
                 println(error.toString())
@@ -64,7 +68,7 @@ class RegisterScreen : AppCompatActivity() {
                         itemArray.add(document.get("UniversityName").toString())
 
                     }
-                    val arrayAdapter=ArrayAdapter(this, R.layout.uni_dropdown_item,itemArray)
+                    val arrayAdapter = ArrayAdapter(this, R.layout.uni_dropdown_item, itemArray)
                     binding.uniAutoComplete.setAdapter(arrayAdapter)
 
                 }
@@ -73,7 +77,7 @@ class RegisterScreen : AppCompatActivity() {
     }
 
     fun getFaculty(uniId: String) {
-        var itemArray=ArrayList<String>()
+        var itemArray = ArrayList<String>()
         db.collection("University/${uniId}/Faculty")
             .addSnapshotListener { value, error ->
                 if (error != null) {
@@ -87,7 +91,7 @@ class RegisterScreen : AppCompatActivity() {
                             itemArray.add(document.get("FacultyName").toString())
                         }
                         getDepartment(uniId, facultyIdArray)
-                        val arrayAdapter=ArrayAdapter(this, R.layout.uni_dropdown_item,itemArray)
+                        val arrayAdapter = ArrayAdapter(this, R.layout.uni_dropdown_item, itemArray)
                         binding.facAutoComplete.setAdapter(arrayAdapter)
                     }
                 }
@@ -103,14 +107,36 @@ class RegisterScreen : AppCompatActivity() {
                     } else {
                         if (value != null) {
                             println("-------------------------------------")
-
                             for (document in value) {
+                                depArray.add(document.get("DepName").toString())
                                 println(document.get("DepName").toString())
                             }
                         }
                     }
                 }
         }
+
     }
 
+    fun facClickControl() {
+        binding.uniAutoComplete.setOnItemClickListener { parent, view, position, id ->
+            binding.textFacLay.isEnabled = true
+            binding.textFacLay.helperText = ""
+        }
+        binding.facAutoComplete.setOnItemClickListener { parent, view, position, id ->
+            binding.textDepLay.isEnabled = true
+            binding.textDepLay.helperText = ""
+
+            var editedArray = ArrayList<String>()
+
+            var idVal=id.toString().toInt()
+
+                    for (i in (idVal*5)..((idVal*5)+4)) {
+                        editedArray.add(depArray[i])
+                    }
+
+            val arrayAdapter = ArrayAdapter(this, R.layout.uni_dropdown_item, editedArray)
+            binding.depAutoComplete.setAdapter(arrayAdapter)
+        }
+    }
 }

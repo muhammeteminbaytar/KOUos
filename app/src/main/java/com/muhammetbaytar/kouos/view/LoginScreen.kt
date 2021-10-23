@@ -1,5 +1,7 @@
 package com.muhammetbaytar.kouos.view
 
+import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,7 +26,7 @@ class LoginScreen : AppCompatActivity() {
         supportActionBar?.hide()
         auth = Firebase.auth
         binding.txtRegister.setOnClickListener {
-            val intent = Intent(this, RegisterScreen::class.java)
+        val intent = Intent(this, RegisterScreen::class.java)
             startActivity(intent)
         }
 

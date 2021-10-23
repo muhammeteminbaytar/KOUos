@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.muhammetbaytar.kouos.R
 import com.muhammetbaytar.kouos.databinding.ActivityRegisterScreenBinding
@@ -22,6 +23,7 @@ class RegisterScreen : AppCompatActivity() {
         supportActionBar?.hide()
 
         auth = Firebase.auth
+        getFireBaseDataOnce()
         registerBtnControl()
     }
 
@@ -31,19 +33,23 @@ class RegisterScreen : AppCompatActivity() {
             var email = binding.txtEmail.text.toString()
             var pass = binding.txtSifre.text.toString()
             if (email.isEmpty() || pass.isEmpty()) {
-                Toast.makeText(this,"Zorunlu alanlar boş bırakılamaz !",Toast.LENGTH_LONG).show()
-            }else{
-                auth.createUserWithEmailAndPassword(email,pass).addOnSuccessListener {
-                    Toast.makeText(this,"Kayıt Başarılı",Toast.LENGTH_LONG).show()
-                    val intent=Intent(this,LoginScreen::class.java)
+                Toast.makeText(this, "Zorunlu alanlar boş bırakılamaz !", Toast.LENGTH_LONG).show()
+            } else {
+                auth.createUserWithEmailAndPassword(email, pass).addOnSuccessListener {
+                    Toast.makeText(this, "Kayıt Başarılı", Toast.LENGTH_LONG).show()
+                    val intent = Intent(this, LoginScreen::class.java)
                     startActivity(intent)
                     finish()
 
-                }.addOnFailureListener{
+                }.addOnFailureListener {
                     //kayıt hatası olunca çalışır.
-                    Toast.makeText(this,it.localizedMessage.toString(),Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, it.localizedMessage.toString(), Toast.LENGTH_LONG).show()
                 }
             }
         }
+    }
+
+    fun getFireBaseDataOnce() {
+
     }
 }

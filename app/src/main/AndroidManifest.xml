@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KOUos">
-        <activity android:name=".view.ForgotPassScreen"></activity>
+        <activity android:name=".catacories.BasvuruYazOkulu"></activity>
+        <activity android:name=".view.ForgotPassScreen" />
         <activity
             android:name=".view.CatacoriesScreen"
             android:screenOrientation="portrait" />

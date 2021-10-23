@@ -14,6 +14,7 @@ import com.muhammetbaytar.kouos.databinding.ActivityRegisterScreenBinding
 class RegisterScreen : AppCompatActivity() {
     lateinit var binding: ActivityRegisterScreenBinding
     private lateinit var auth: FirebaseAuth
+    val db = FirebaseFirestore.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // setContentView(R.layout.activity_register_screen)
@@ -51,5 +52,50 @@ class RegisterScreen : AppCompatActivity() {
 
     fun getFireBaseDataOnce() {
 
+        db.collection("University").addSnapshotListener { value, error ->
+            if (error != null) {
+                println(error.toString())
+            } else {
+                if (value != null) {
+                    for (document in value) {
+                        println(document.get("UniversityName").toString()+"\n")
+
+                        getFaculty(document.id)
+                    }
+                }
+            }
+        }
     }
+
+    fun getFaculty(uniId:String){
+        db.collection("University/${uniId}/Faculty")
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    println(error.toString())
+                } else {
+                    if (value != null) {
+                        for (document in value) {
+
+                            println(document.get("FacultyName").toString()+"\n")
+                            getDepartment(uniId,document.id)
+                        }
+                    }
+                }
+            }
+    }
+    fun getDepartment(uniId: String,facId:String){
+        db.collection("University/${uniId}/Faculty/${facId}/Department")
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    println(error.toString())
+                } else {
+                    if (value != null) {
+                        for (document in value) {
+                            println(document.get("DepName").toString())
+                        }
+                    }
+                }
+            }
+    }
+
 }

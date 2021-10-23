@@ -3,6 +3,7 @@ package com.muhammetbaytar.kouos.view
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -51,51 +52,65 @@ class RegisterScreen : AppCompatActivity() {
     }
 
     fun getFireBaseDataOnce() {
-
+        var itemArray=ArrayList<String>()
         db.collection("University").addSnapshotListener { value, error ->
             if (error != null) {
                 println(error.toString())
             } else {
                 if (value != null) {
                     for (document in value) {
-                        println(document.get("UniversityName").toString()+"\n")
-
+                        println(document.get("UniversityName").toString() + "\n")
                         getFaculty(document.id)
+                        itemArray.add(document.get("UniversityName").toString())
+
                     }
+                    val arrayAdapter=ArrayAdapter(this, R.layout.uni_dropdown_item,itemArray)
+                    binding.uniAutoComplete.setAdapter(arrayAdapter)
+
                 }
             }
         }
     }
 
-    fun getFaculty(uniId:String){
+    fun getFaculty(uniId: String) {
+        var itemArray=ArrayList<String>()
         db.collection("University/${uniId}/Faculty")
             .addSnapshotListener { value, error ->
                 if (error != null) {
                     println(error.toString())
                 } else {
+                    val facultyIdArray = ArrayList<String>()
                     if (value != null) {
                         for (document in value) {
-
-                            println(document.get("FacultyName").toString()+"\n")
-                            getDepartment(uniId,document.id)
+                            println(document.get("FacultyName").toString() + "\n")
+                            facultyIdArray.add(document.id)
+                            itemArray.add(document.get("FacultyName").toString())
                         }
+                        getDepartment(uniId, facultyIdArray)
+                        val arrayAdapter=ArrayAdapter(this, R.layout.uni_dropdown_item,itemArray)
+                        binding.facAutoComplete.setAdapter(arrayAdapter)
                     }
                 }
             }
     }
-    fun getDepartment(uniId: String,facId:String){
-        db.collection("University/${uniId}/Faculty/${facId}/Department")
-            .addSnapshotListener { value, error ->
-                if (error != null) {
-                    println(error.toString())
-                } else {
-                    if (value != null) {
-                        for (document in value) {
-                            println(document.get("DepName").toString())
+
+    fun getDepartment(uniId: String, facIds: ArrayList<String>) {
+        for (facId in facIds) {
+            db.collection("University/${uniId}/Faculty/${facId}/Department")
+                .addSnapshotListener { value, error ->
+                    if (error != null) {
+                        println(error.toString())
+                    } else {
+                        if (value != null) {
+                            println("-------------------------------------")
+
+                            for (document in value) {
+                                println(document.get("DepName").toString())
+                            }
                         }
                     }
                 }
-            }
+        }
     }
 
 }

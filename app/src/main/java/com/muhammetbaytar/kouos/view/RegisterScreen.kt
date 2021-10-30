@@ -1,7 +1,9 @@
 package com.muhammetbaytar.kouos.view
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -11,10 +13,12 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.DatePicker
 import android.widget.Toast
+import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.muhammetbaytar.kouos.R
 import com.muhammetbaytar.kouos.databinding.ActivityRegisterScreenBinding
 import java.util.*
@@ -25,6 +29,7 @@ class RegisterScreen : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     val db = FirebaseFirestore.getInstance()
     var depArray = ArrayList<String>()
+    lateinit var pImgUri:Uri
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +44,35 @@ class RegisterScreen : AppCompatActivity() {
         registerBtnControl()
         facClickControl()
         dateClickOpen()
+        clickImageBtn()
+    }
+
+    fun clickImageBtn(){
+        binding.iwProfileImg.setOnClickListener {
+            ImagePicker.with(this)
+                .cropSquare() //Crop image(Optional), Check Customization for more option
+                .compress(1024)            //Final image size will be less than 1 MB(Optional)
+                .maxResultSize(
+                    1080,
+                    1080
+                )    //Final image resolution will be less than 1080 x 1080(Optional)
+                .start()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        // gelen fotoğrafı dönderir
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode==Activity.RESULT_OK){
+            binding.iwProfileImg.setImageURI(data?.data)
+
+            var pData= data?.data
+            if (pData != null) {
+                pImgUri= pData
+            }
+
+        }
+
     }
 
     fun registerBtnControl() {
@@ -49,6 +83,7 @@ class RegisterScreen : AppCompatActivity() {
                 var pass = binding.txtSifre.text.toString()
                 auth.createUserWithEmailAndPassword(email, pass).addOnSuccessListener {
                     saveFirestoreUsers()
+                    saveProfileImgUpload()
                     Toast.makeText(this, "Kayıt Başarılı", Toast.LENGTH_LONG).show()
                     val intent = Intent(this, LoginScreen::class.java)
                     startActivity(intent)
@@ -200,6 +235,19 @@ class RegisterScreen : AppCompatActivity() {
         }
     }
 
+    fun saveProfileImgUpload(){
+        val storage=Firebase.storage
+        val reference = storage.reference
+        val pImageReference=reference.child("Profiles").child(auth.uid+".jpg")
+        if (pImgUri!= null){
+            pImageReference.putFile(pImgUri).addOnSuccessListener {
+
+            }.addOnFailureListener{
+                println(it.localizedMessage.toString())
+            }
+        }
+    }
+
     fun emptyControl(): Boolean {
         val editTextArray = listOf(
             binding.txtEmail,
@@ -215,15 +263,23 @@ class RegisterScreen : AppCompatActivity() {
             binding.depAutoComplete,
             binding.facAutoComplete
         )
+        if (!pImageEmptyControl()){
+            Toast.makeText(this, "Lütfen Fotoğraf Seçin.", Toast.LENGTH_LONG).show()
 
+            return false
+        }
+        else{
         for (text_widget in editTextArray) {
             if (text_widget.text.toString().isEmpty()) {
                 Toast.makeText(this, "Tüm Alanlar Eksiksiz Doldurulmalıdır.", Toast.LENGTH_LONG)
                     .show()
                 return false
-                break
             }
-        }
+        }}
         return true
+    }
+
+    private fun pImageEmptyControl():Boolean{
+        return binding.iwProfileImg.drawable.constantState != resources.getDrawable(R.drawable.add_img).constantState
     }
 }

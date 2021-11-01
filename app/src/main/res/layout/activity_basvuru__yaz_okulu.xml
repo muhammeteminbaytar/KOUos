@@ -6,4 +6,160 @@
     android:layout_height="match_parent"
     tools:context=".catacories.BasvuruYazOkulu">
 
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout1"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:foregroundGravity="center"
+                android:hint="Yaz Okulu Dönemi"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:scrollbarSize="25dp"
+                app:helperTextTextColor="#CC2828"
+                app:hintTextAppearance="@style/TextAppearance.AppCompat.Small"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardView"
+                app:passwordToggleTint="#717171"
+                app:startIconDrawable="@drawable/ic_dep">
+
+                <com.google.android.material.textfield.TextInputEditText
+
+                    android:id="@+id/txt_donem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="15"
+                    android:inputType="text"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:textAlignment="textStart"
+                    android:textColorHint="#717171"
+                    android:textSize="18sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout2"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:foregroundGravity="center"
+                android:hint="Danışman Adı-Soyadı"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:scrollbarSize="25dp"
+                app:helperTextTextColor="#CC2828"
+                app:hintTextAppearance="@style/TextAppearance.AppCompat.Small"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout1"
+                app:passwordToggleTint="#717171"
+                app:startIconDrawable="@drawable/ic_person">
+
+                <com.google.android.material.textfield.TextInputEditText
+
+                    android:id="@+id/txt_danisman"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="15"
+                    android:inputType="text"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:textAlignment="textStart"
+                    android:textColorHint="#717171"
+                    android:textSize="18sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout3"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:foregroundGravity="center"
+                android:hint="Başvurulan Üniversite"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:scrollbarSize="25dp"
+                app:helperTextTextColor="#CC2828"
+                app:hintTextAppearance="@style/TextAppearance.AppCompat.Small"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
+                app:passwordToggleTint="#717171"
+                app:startIconDrawable="@drawable/ic_school">
+
+                <com.google.android.material.textfield.TextInputEditText
+
+                    android:id="@+id/txt_universite"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="15"
+                    android:inputType="text"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:textAlignment="textStart"
+                    android:textColorHint="#717171"
+                    android:textSize="18sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout4"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:foregroundGravity="center"
+                android:hint="Yaz Okulu Başlama Bitiş Tarihi"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:scrollbarSize="25dp"
+                app:helperTextTextColor="#CC2828"
+                app:hintTextAppearance="@style/TextAppearance.AppCompat.Small"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout3"
+                app:passwordToggleTint="#717171"
+                app:startIconDrawable="@drawable/ic_date">
+
+                <com.google.android.material.textfield.TextInputEditText
+
+                    android:id="@+id/txt_tarih"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="15"
+                    android:inputType="text"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:textAlignment="textStart"
+                    android:textColorHint="#717171"
+                    android:textSize="18sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

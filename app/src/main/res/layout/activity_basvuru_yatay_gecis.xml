@@ -4,14 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".catacories.BasvuruYazOkulu">
+    tools:context=".catacories.BasvuruYatayGecis">
 
     <ScrollView
-        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_crtPdf"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="80dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -22,47 +21,13 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout1"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:foregroundGravity="center"
-                android:hint="Yaz Okulu Dönemi"
-                android:paddingStart="24dp"
-                android:paddingEnd="24dp"
-                android:scrollbarSize="25dp"
-                app:helperTextTextColor="#CC2828"
-                app:hintTextAppearance="@style/TextAppearance.AppCompat.Small"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardView"
-                app:passwordToggleTint="#717171"
-                app:startIconDrawable="@drawable/ic_dep">
-
-                <com.google.android.material.textfield.TextInputEditText
-
-                    android:id="@+id/txt_donem"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="15"
-                    android:inputType="text"
-                    android:paddingStart="12dp"
-                    android:paddingEnd="12dp"
-                    android:textAlignment="textStart"
-                    android:textColorHint="#717171"
-                    android:textSize="18sp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout2"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:foregroundGravity="center"
-                android:hint="Danışman Adı-Soyadı"
+                android:hint="Disiplin Cezanız Var mı ?"
                 android:paddingStart="24dp"
                 android:paddingEnd="24dp"
                 android:scrollbarSize="25dp"
@@ -73,11 +38,11 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayout1"
                 app:passwordToggleTint="#717171"
-                app:startIconDrawable="@drawable/ic_person">
+                app:startIconDrawable="@drawable/ic_disiplin">
 
                 <com.google.android.material.textfield.TextInputEditText
 
-                    android:id="@+id/txt_danisman"
+                    android:id="@+id/txt_disiplin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="15"
@@ -95,8 +60,9 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:foregroundGravity="center"
-                android:hint="Başvurulan Üniversite"
+                android:hint="Not Ortalaması"
                 android:paddingStart="24dp"
                 android:paddingEnd="24dp"
                 android:scrollbarSize="25dp"
@@ -107,15 +73,16 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
                 app:passwordToggleTint="#717171"
-                app:startIconDrawable="@drawable/ic_school">
+                app:startIconDrawable="@drawable/ic_number">
 
                 <com.google.android.material.textfield.TextInputEditText
 
-                    android:id="@+id/txt_universite"
+                    android:id="@+id/txt_notort"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="15"
-                    android:inputType="text"
+                    android:inputType="numberDecimal"
+                    android:maxLength="9"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
                     android:textAlignment="textStart"
@@ -129,8 +96,9 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:foregroundGravity="center"
-                android:hint="Yaz Okulu Başlama - Bitiş Tarihi"
+                android:hint="Üniversite Yerleşme Yılı"
                 android:paddingStart="24dp"
                 android:paddingEnd="24dp"
                 android:scrollbarSize="25dp"
@@ -145,11 +113,12 @@
 
                 <com.google.android.material.textfield.TextInputEditText
 
-                    android:id="@+id/txt_tarih"
+                    android:id="@+id/txt_yil"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="15"
-                    android:inputType="text"
+                    android:inputType="number"
+                    android:maxLength="11"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
                     android:textAlignment="textStart"
@@ -161,28 +130,29 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout5"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:foregroundGravity="center"
-                android:hint="1. Seçilebilir Ders"
+                android:hint="Üniversite Sınav Puanı"
                 android:paddingStart="24dp"
-                android:paddingEnd="0dp"
+                android:paddingEnd="24dp"
                 android:scrollbarSize="25dp"
                 app:helperTextTextColor="#CC2828"
                 app:hintTextAppearance="@style/TextAppearance.AppCompat.Small"
-                app:layout_constraintEnd_toStartOf="@+id/textAkts1"
-                app:layout_constraintStart_toStartOf="@+id/textInputLayout4"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayout4"
-                app:passwordToggleTint="#717171"
-                app:startIconDrawable="@drawable/ic_faculty">
+                app:startIconDrawable="@drawable/ic_ortalama">
 
                 <com.google.android.material.textfield.TextInputEditText
 
-                    android:id="@+id/txt_ders1"
+                    android:id="@+id/txt_unipuan"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="15"
-                    android:inputType="text"
+                    android:inputType="number"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
                     android:textAlignment="textStart"
@@ -194,28 +164,31 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout6"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:foregroundGravity="center"
-                android:hint="2. Seçilebilir Ders"
+                android:hint="Başvuru Fakültesi"
                 android:paddingStart="24dp"
-                android:paddingEnd="0dp"
+                android:paddingEnd="24dp"
                 android:scrollbarSize="25dp"
                 app:helperTextTextColor="#CC2828"
                 app:hintTextAppearance="@style/TextAppearance.AppCompat.Small"
-                app:layout_constraintEnd_toStartOf="@+id/textAkts2"
-                app:layout_constraintStart_toStartOf="@+id/textInputLayout5"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayout5"
                 app:passwordToggleTint="#717171"
                 app:startIconDrawable="@drawable/ic_faculty">
 
                 <com.google.android.material.textfield.TextInputEditText
 
-                    android:id="@+id/txt_ders2"
+                    android:id="@+id/txt_fak"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="15"
                     android:inputType="text"
+                    android:maxLength="10"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
                     android:textAlignment="textStart"
@@ -227,24 +200,26 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout7"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:foregroundGravity="center"
-                android:hint="3. Seçilebilir Ders"
+                android:hint="Başvurduğu Bölüm"
                 android:paddingStart="24dp"
-                android:paddingEnd="0dp"
+                android:paddingEnd="24dp"
                 android:scrollbarSize="25dp"
                 app:helperTextTextColor="#CC2828"
                 app:hintTextAppearance="@style/TextAppearance.AppCompat.Small"
-                app:layout_constraintEnd_toStartOf="@+id/textAkts1"
-                app:layout_constraintStart_toStartOf="@+id/textInputLayout6"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayout6"
                 app:passwordToggleTint="#717171"
-                app:startIconDrawable="@drawable/ic_faculty">
+                app:startIconDrawable="@drawable/ic_dep">
 
                 <com.google.android.material.textfield.TextInputEditText
 
-                    android:id="@+id/txt_ders3"
+                    android:id="@+id/txt_bolum"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="15"
@@ -258,111 +233,83 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textAkts1"
+                android:id="@+id/textInputLayout8"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="110dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:foregroundGravity="center"
-                android:hint="AKTS"
-                android:paddingStart="4dp"
+                android:hint="Başvuru Bölüm Puanı"
+                android:paddingStart="24dp"
                 android:paddingEnd="24dp"
                 android:scrollbarSize="25dp"
                 app:helperTextTextColor="#CC2828"
                 app:hintTextAppearance="@style/TextAppearance.AppCompat.Small"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayout4"
-                app:passwordToggleTint="#717171">
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout7"
+                app:passwordToggleTint="#717171"
+                app:startIconDrawable="@drawable/ic_sinif">
 
                 <com.google.android.material.textfield.TextInputEditText
 
-                    android:id="@+id/txt_akts1"
+                    android:id="@+id/txt_bolpuan"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="15"
                     android:inputType="number"
-                    android:paddingStart="4dp"
+                    android:maxLength="1"
+                    android:paddingStart="12dp"
                     android:paddingEnd="12dp"
-                    android:textAlignment="center"
+                    android:textAlignment="textStart"
                     android:textColorHint="#717171"
                     android:textSize="18sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textAkts2"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="110dp"
+                android:id="@+id/text_uni_lay"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:foregroundGravity="center"
-                android:hint="AKTS"
-                android:paddingStart="4dp"
+                android:hint="Başvuru Türü"
+                android:paddingStart="24dp"
                 android:paddingEnd="24dp"
                 android:scrollbarSize="25dp"
                 app:helperTextTextColor="#CC2828"
                 app:hintTextAppearance="@style/TextAppearance.AppCompat.Small"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayout5"
-                app:passwordToggleTint="#717171">
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout8"
+                app:passwordToggleTint="#717171"
+                app:startIconDrawable="@drawable/ic_school">
 
-                <com.google.android.material.textfield.TextInputEditText
-
-                    android:id="@+id/txt_akts2"
+                <AutoCompleteTextView
+                    android:id="@+id/uni_auto_complete"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="15"
-                    android:inputType="number"
-                    android:paddingStart="4dp"
+                    android:inputType="none"
+                    android:paddingStart="12dp"
                     android:paddingEnd="12dp"
-                    android:textAlignment="center"
+                    android:textAlignment="textStart"
                     android:textColorHint="#717171"
                     android:textSize="18sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textAkts3"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="110dp"
-                android:layout_height="wrap_content"
-                android:foregroundGravity="center"
-                android:hint="AKTS"
-                android:paddingStart="4dp"
-                android:paddingEnd="24dp"
-                android:scrollbarSize="25dp"
-                app:helperTextTextColor="#CC2828"
-                app:hintTextAppearance="@style/TextAppearance.AppCompat.Small"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayout6"
-                app:passwordToggleTint="#717171">
-
-                <com.google.android.material.textfield.TextInputEditText
-
-                    android:id="@+id/txt_akts3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="15"
-                    android:inputType="number"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="12dp"
-                    android:textAlignment="center"
-                    android:textColorHint="#717171"
-                    android:textSize="18sp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </ScrollView>
 
     <Button
-        android:id="@+id/btn_crtPdf"
+        android:id="@+id/btn_createPdf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="PDF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -128,7 +128,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
 
-                    android:id="@+id/txt_Email"
+                    android:id="@+id/txt_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="15"
@@ -163,7 +163,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
 
-                    android:id="@+id/txt_ogrno"
+                    android:id="@+id/txt_Ogrno"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="15"
@@ -199,7 +199,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
 
-                    android:id="@+id/txt_kimlikno"
+                    android:id="@+id/txt_Kimlikno"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="15"
@@ -307,7 +307,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
 
-                    android:id="@+id/txt_adres"
+                    android:id="@+id/txt_Adres"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="15"

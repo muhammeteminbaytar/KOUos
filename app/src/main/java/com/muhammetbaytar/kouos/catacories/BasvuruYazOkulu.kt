@@ -21,7 +21,13 @@ import java.io.FileOutputStream
 import java.util.*
 
 class BasvuruYazOkulu : AppCompatActivity() {
-    lateinit var dersEkleDialog:Dialog
+    lateinit var ogrenciAd:String
+    lateinit var ogrenciNo:String
+    lateinit var ogrenciAdres:String
+    lateinit var ogrenciTelNo:String
+    lateinit var bolum:String
+    lateinit var fakulte:String
+
     lateinit var binding: ActivityBasvuruYazOkuluBinding
     private var STORAGE_CODE = 1001
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,11 +41,6 @@ class BasvuruYazOkulu : AppCompatActivity() {
         clickControl()
     }
 
-    private fun createDersEklePopup() {
-        dersEkleDialog= Dialog(this)
-        dersEkleDialog.setContentView(R.layout.dersekle_popup)
-        dersEkleDialog.show()
-    }
 
 
     fun getFireStoreData() {
@@ -53,7 +54,13 @@ class BasvuruYazOkulu : AppCompatActivity() {
                 } else {
                     if (value != null) {
                         for (document in value.documents) {
-                            println(document.get("userAdSoyad").toString())
+                            //println(document.get("userAdSoyad").toString())
+                            ogrenciAd=document.get("userAdSoyad").toString()
+                            ogrenciNo=document.get("userOgrenciNo").toString()
+                            ogrenciAdres=document.get("userAdres").toString()
+                            ogrenciTelNo=document.get("userTel").toString()
+                            bolum=document.get("userDep").toString()
+                            fakulte=document.get("userFak").toString()
                         }
                     }
                 }
@@ -73,10 +80,6 @@ class BasvuruYazOkulu : AppCompatActivity() {
                 savePdf()
             }
         }
-
-        binding.textInputLayout5.setStartIconOnClickListener {
-            createDersEklePopup()
-        }
     }
 
     fun savePdf(){
@@ -92,19 +95,46 @@ class BasvuruYazOkulu : AppCompatActivity() {
 
 
             var giris="T.C.\n" +
-                    "KOCAELİ ÜNİVERSİTESİ\n" +
-                    "TEKNOLOJİ FAKÜLTESİ\n" +
-                    "BİLİŞİM SİSTEMERİ MÜHENDİSLİĞİ BÖLÜM BAŞKANLIĞINA\n"
-            var ikinciGiris="QWERTYUIOPĞÜASDFGHJKLŞİZXCVBNMÖÇ"
+                    "KOCAELI ÜNIVERSITESI\n" +
+                    fakulte+"\n"+
+                    bolum+" BÖLÜM BASKALIGINA\n"
+            var ikinciGiris="\n\nUniversiteniz $fakulte $bolum Bölümü/Programi\n $ogrenciNo Numarali $ogrenciAd isimli ögrencisiyim.\n" +
+                    "Kocaeli Üniversitesinde Yaz Okulu açilmayacagindan asagida tabloda belirttigim dersleri, gerekli sartlari" +
+                    "\n" +
+                    "(kredi, akts ve içerik) saglayan ${binding.txtUniversite.text.toString()}'nden alabilmem hususunda geregini arz ederim. Saygilarimla"
+
+            val ucuncuGiris="\n\nAdi ve Soyadi : $ogrenciAd \n" +
+                            "Ögrenci No : $ogrenciNo \n" +
+                            "Bölümü : $bolum \n"  +
+                            "Cep Telefon No : $ogrenciTelNo \n"+
+                            "E-posta Adresi : ${FirebaseAuth.getInstance().currentUser?.email.toString()} \n" +
+                            "Adresi : $ogrenciAdres \n" +
+                            "Danisman Adi Soyadi : ${(binding.txtDanisman.text.toString())}\n" +
+                            "Yaz Okulu Donemi : ${(binding.txtDonem.text.toString())} \n" +
+                            "Yaz Okulu Baslama Bitis Tarihi : ${(binding.txtTarih.text.toString())} \n" +
+                             "\n" +
+                             "${binding.txtDers1.text.toString()}  - ${binding.txtAkts1.text.toString()} \n" +
+                             "${binding.txtDers2.text.toString()}  - ${binding.txtAkts2.text.toString()} \n" +
+                             "${binding.txtDers3.text.toString()}  - ${binding.txtAkts3.text.toString()} \n"
+
+
+            val dorduncuGiris="\n IMZA "
+
 
             mDoc.addAuthor("MyTeam")
-            val paragraph=Paragraph(giris,FontFactory.getFont(FontFactory.TIMES_BOLD,BaseFont.CP1252,BaseFont.EMBEDDED))
-            val paragraph2=Paragraph(ikinciGiris,FontFactory.getFont(FontFactory.TIMES_BOLD,BaseFont.CP1252,BaseFont.EMBEDDED))
 
+            val paragraph=Paragraph(giris,FontFactory.getFont(FontFactory.TIMES_BOLD,BaseFont.CP1252,BaseFont.EMBEDDED))
+            val paragraph2=Paragraph(ikinciGiris,FontFactory.getFont(FontFactory.TIMES,BaseFont.CP1252,BaseFont.EMBEDDED))
+            val paragraph3=Paragraph(ucuncuGiris,FontFactory.getFont(FontFactory.TIMES,BaseFont.CP1252,BaseFont.EMBEDDED))
+            val paragraph4=Paragraph(dorduncuGiris,FontFactory.getFont(FontFactory.TIMES,BaseFont.CP1252,BaseFont.EMBEDDED))
             paragraph.alignment=Element.ALIGN_CENTER
             paragraph2.alignment=Element.ALIGN_CENTER
+            paragraph3.alignment=Element.ALIGN_LEFT
+            paragraph4.alignment=Element.ALIGN_RIGHT
             mDoc.add(paragraph)
             mDoc.add(paragraph2)
+            mDoc.add(paragraph3)
+            mDoc.add(paragraph4)
             mDoc.close()
             Toast.makeText(this, "$mFileName.pdf içine oluşturuldu $mFilePath", Toast.LENGTH_SHORT).show()
 

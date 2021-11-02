@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.muhammetbaytar.kouos.R
+import com.muhammetbaytar.kouos.catacories.BasvuruYatayGecis
 import com.muhammetbaytar.kouos.catacories.BasvuruYazOkulu
 import com.muhammetbaytar.kouos.databinding.ActivityCatacoriesScreenBinding
 import com.muhammetbaytar.kouos.databinding.ActivityRegisterScreenBinding
@@ -26,6 +27,10 @@ class CatacoriesScreen : AppCompatActivity() {
 
         binding.btnYazOkulu.setOnClickListener {
             var intent=Intent(this,BasvuruYazOkulu::class.java)
+            startActivity(intent)
+        }
+        binding.btnYatayGecis.setOnClickListener {
+            var intent=Intent(this,BasvuruYatayGecis::class.java)
             startActivity(intent)
         }
 

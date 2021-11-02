@@ -1,5 +1,6 @@
 package com.muhammetbaytar.kouos.catacories
 
+import android.app.Dialog
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.icu.text.SimpleDateFormat
@@ -7,17 +8,20 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.itextpdf.text.*
 import com.itextpdf.text.pdf.BaseFont
 import com.itextpdf.text.pdf.PdfWriter
+import com.muhammetbaytar.kouos.R
 import com.muhammetbaytar.kouos.databinding.ActivityBasvuruYazOkuluBinding
 import java.io.FileOutputStream
 import java.util.*
 
 class BasvuruYazOkulu : AppCompatActivity() {
+    lateinit var dersEkleDialog:Dialog
     lateinit var binding: ActivityBasvuruYazOkuluBinding
     private var STORAGE_CODE = 1001
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +34,13 @@ class BasvuruYazOkulu : AppCompatActivity() {
         getFireStoreData()
         clickControl()
     }
+
+    private fun createDersEklePopup() {
+        dersEkleDialog= Dialog(this)
+        dersEkleDialog.setContentView(R.layout.dersekle_popup)
+        dersEkleDialog.show()
+    }
+
 
     fun getFireStoreData() {
         val auth = FirebaseAuth.getInstance()
@@ -62,6 +73,10 @@ class BasvuruYazOkulu : AppCompatActivity() {
                 savePdf()
             }
         }
+
+        binding.textInputLayout5.setStartIconOnClickListener {
+            createDersEklePopup()
+        }
     }
 
     fun savePdf(){
@@ -77,17 +92,19 @@ class BasvuruYazOkulu : AppCompatActivity() {
 
 
             var giris="T.C.\n" +
-                    "KOCAELI ÜNIVERSITESI\n" +
-                    "TEKNOLOJI FAKÜLTESI\n" +
-                    "BILIŞIM SISTEMERI MÜHENDISLIGI BÖLÜM BASKANLIGINA\n"
+                    "KOCAELİ ÜNİVERSİTESİ\n" +
+                    "TEKNOLOJİ FAKÜLTESİ\n" +
+                    "BİLİŞİM SİSTEMERİ MÜHENDİSLİĞİ BÖLÜM BAŞKANLIĞINA\n"
+            var ikinciGiris="QWERTYUIOPĞÜASDFGHJKLŞİZXCVBNMÖÇ"
 
             mDoc.addAuthor("MyTeam")
             val paragraph=Paragraph(giris,FontFactory.getFont(FontFactory.TIMES_BOLD,BaseFont.CP1252,BaseFont.EMBEDDED))
-            // getFont(FontFactory.TIMES_BOLD,18,Font.BOLD, BaseColor.BLACK)
+            val paragraph2=Paragraph(ikinciGiris,FontFactory.getFont(FontFactory.TIMES_BOLD,BaseFont.CP1252,BaseFont.EMBEDDED))
 
             paragraph.alignment=Element.ALIGN_CENTER
-            paragraph
+            paragraph2.alignment=Element.ALIGN_CENTER
             mDoc.add(paragraph)
+            mDoc.add(paragraph2)
             mDoc.close()
             Toast.makeText(this, "$mFileName.pdf içine oluşturuldu $mFilePath", Toast.LENGTH_SHORT).show()
 

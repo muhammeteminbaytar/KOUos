@@ -259,7 +259,6 @@
                     android:layout_height="wrap_content"
                     android:ems="15"
                     android:inputType="number"
-                    android:maxLength="1"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
                     android:textAlignment="textStart"

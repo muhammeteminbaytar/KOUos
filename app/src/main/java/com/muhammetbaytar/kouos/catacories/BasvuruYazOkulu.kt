@@ -1,6 +1,8 @@
 package com.muhammetbaytar.kouos.catacories
 
 import android.app.Dialog
+import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.icu.text.SimpleDateFormat
@@ -17,6 +19,7 @@ import com.itextpdf.text.pdf.BaseFont
 import com.itextpdf.text.pdf.PdfWriter
 import com.muhammetbaytar.kouos.R
 import com.muhammetbaytar.kouos.databinding.ActivityBasvuruYazOkuluBinding
+import com.muhammetbaytar.kouos.view.FileUploadAct
 import java.io.FileOutputStream
 import java.util.*
 
@@ -69,6 +72,15 @@ class BasvuruYazOkulu : AppCompatActivity() {
 
     fun clickControl() {
         binding.btnCrtPdf.setOnClickListener {
+            createAlertDialog()
+        }
+    }
+    fun createAlertDialog(){
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Bilgilendirme")
+        builder.setCancelable(false)
+        builder.setMessage("Başvuru tamamlanması için indirilen belgeyi imzalayarak sistemem geri yükleyin.")
+        builder.setPositiveButton("Tamam", DialogInterface.OnClickListener { dialog, which ->
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                 if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
                     val permission = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -79,7 +91,12 @@ class BasvuruYazOkulu : AppCompatActivity() {
             }else{
                 savePdf()
             }
-        }
+            val intent=Intent(this,FileUploadAct::class.java)
+            intent.putExtra("typeData","yazokulu")
+            startActivity(intent)
+        })
+        builder.show()
+
     }
 
     fun savePdf(){
@@ -136,7 +153,7 @@ class BasvuruYazOkulu : AppCompatActivity() {
             mDoc.add(paragraph3)
             mDoc.add(paragraph4)
             mDoc.close()
-            Toast.makeText(this, "$mFileName.pdf içine oluşturuldu $mFilePath", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "$mFileName.pdf içine oluşturuldu $mFilePath", Toast.LENGTH_LONG).show()
 
 
         }catch (e: Exception){

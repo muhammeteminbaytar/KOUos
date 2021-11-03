@@ -1,5 +1,7 @@
 package com.muhammetbaytar.kouos.catacories
 
+import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.icu.text.SimpleDateFormat
 import android.os.Build
@@ -7,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.itextpdf.text.Document
@@ -15,9 +18,8 @@ import com.itextpdf.text.FontFactory
 import com.itextpdf.text.Paragraph
 import com.itextpdf.text.pdf.BaseFont
 import com.itextpdf.text.pdf.PdfWriter
-import com.muhammetbaytar.kouos.R
-import com.muhammetbaytar.kouos.databinding.ActivityBasvuruDikeyGecisBinding
 import com.muhammetbaytar.kouos.databinding.ActivityBasvuruIntibakBinding
+import com.muhammetbaytar.kouos.view.FileUploadAct
 import java.io.FileOutputStream
 import java.util.*
 
@@ -48,6 +50,16 @@ class BasvuruIntibak : AppCompatActivity() {
     }
     fun clickControl(){
         binding.buttonCrtPdf.setOnClickListener {
+            createAlertDialog()
+        }
+    }
+
+    fun createAlertDialog(){
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Bilgilendirme")
+        builder.setCancelable(false)
+        builder.setMessage("Başvuru tamamlanması için indirilen belgeyi imzalayarak sistemem geri yükleyin.")
+        builder.setPositiveButton("Tamam", DialogInterface.OnClickListener { dialog, which ->
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                 if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
                     val permission = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -58,9 +70,13 @@ class BasvuruIntibak : AppCompatActivity() {
             }else{
                 savePdf()
             }
-        }
-    }
+            val intent= Intent(this, FileUploadAct::class.java)
+            intent.putExtra("typeData","intibak")
+            startActivity(intent)
+        })
+        builder.show()
 
+    }
     fun savePdf(){
         val mDoc= Document()
         val mFileName= SimpleDateFormat("yyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis())
@@ -75,7 +91,7 @@ class BasvuruIntibak : AppCompatActivity() {
 
             var giris="T.C.\n" +
                     "KOCAELI ÜNIVERSITESI\n" +
-                    "DIKEY GECIS BASVURU FORMU\n"
+                    "$fakulte Dekanligina\n"
 
             val ikinciGiris="\n\nAdi ve Soyadi : $ogrenciAd \n" +
                     "Ögrenci No : $ogrenciNo \n" +
@@ -83,20 +99,19 @@ class BasvuruIntibak : AppCompatActivity() {
                     "Cep Telefon No : $ogrenciTelNo \n"+
                     "E-posta Adresi : ${FirebaseAuth.getInstance().currentUser?.email.toString()} \n" +
                     "Adresi : $ogrenciAdres \n" +
-                    "TC Kimlik No : $kimlikNo \n" +
-                    "Dogum Tarihi : $dTatihi\n\n\n" +
-                    "Kayitli Üniversite : Kocaeli Üniversitesi \n" +
-                    "Kayitli Fakülte : $fakulte\n" +
-                    "Kayitli Bölüm : $bolum\n" +
-                 /*   "Basvurdugunuz Universite: ${(binding.txtUni.text.toString())}\n" +
-                    "Basvurdugunuz Fakulte : ${(binding.txtFak.text.toString())}\n" +
-                    "Basvurdugunuz Bölüm : ${(binding.txtBolum.text.toString())}\n" +*/
-                    "Sinif : $sinif\n" +
-                    "Ögrenci No : $ogrenciNo\n\n" +
+                    "\n" +
+                    "Daha önce ${(binding.txtUni.text.toString())}  ${(binding.txtFak.text.toString())} Fakultesi ${(binding.txtBolum.text.toString())} Bolumunde aldigim ve \n" +
+                    "asagida belirttigim ders / derslerden muaf olmak istiyorum.Gereginin yapilmasini arz ederim.\n\n" +
+                    "Daha Once Aldigim Ders: ${(binding.txtDers3.text.toString())}     ${(binding.txtAkts3.text.toString())} AKTS\n" +
+                    "Muaf Olmak Istedigim Ders: ${(binding.txtDers4.text.toString())}     ${(binding.txtAkts.text.toString())} AKTS\n\n" +
+                    "Eklenecek Belge/Belgeler:\n" +
+                    "1- Transkript Belgesi (Onayli)\n" +
+                    "2- Onayli Ders Içerikleri"
 
-                    "\nBeyan ettigim bilgilerin veya belgelerin gerçege aykiri olmasi veya daha önce dikey geçiş yapmiş olmam\n" +
-                    "halinde hakkimda cezai işlemlerin yürütülecegini ve kaydim yapilmiş olsa dahi silinecegini bildigimi kabul ediyorum.\n" +
-                    ""
+
+
+
+
 
 
 

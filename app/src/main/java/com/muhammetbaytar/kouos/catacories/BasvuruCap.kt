@@ -1,5 +1,7 @@
 package com.muhammetbaytar.kouos.catacories
 
+import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.icu.text.SimpleDateFormat
 import android.os.Build
@@ -8,6 +10,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.itextpdf.text.Document
@@ -19,6 +22,7 @@ import com.itextpdf.text.pdf.PdfWriter
 import com.muhammetbaytar.kouos.R
 import com.muhammetbaytar.kouos.databinding.ActivityBasvuruCapBinding
 import com.muhammetbaytar.kouos.databinding.ActivityBasvuruDikeyGecisBinding
+import com.muhammetbaytar.kouos.view.FileUploadAct
 import java.io.FileOutputStream
 import java.util.*
 
@@ -54,6 +58,15 @@ class BasvuruCap : AppCompatActivity() {
         binding.ogretimTuru.setAdapter(arrayAdapter)
 
         binding.buttonCreatePdf.setOnClickListener {
+            createAlertDialog()
+        }
+    }
+    fun createAlertDialog(){
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Bilgilendirme")
+        builder.setCancelable(false)
+        builder.setMessage("Başvuru tamamlanması için indirilen belgeyi imzalayarak sistemem geri yükleyin.")
+        builder.setPositiveButton("Tamam", DialogInterface.OnClickListener { dialog, which ->
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                 if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
                     val permission = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -64,12 +77,18 @@ class BasvuruCap : AppCompatActivity() {
             }else{
                 savePdf()
             }
-        }
+
+            val intent= Intent(this, FileUploadAct::class.java)
+            intent.putExtra("typeData","cap")
+            startActivity(intent)
+        })
+        builder.show()
+
     }
 
     fun savePdf(){
         val mDoc= Document()
-        val mFileName= SimpleDateFormat("yyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis())
+        val mFileName= ogrenciNo+"_"+ogrenciAd+"_"+SimpleDateFormat("yyyMMddHHmm", Locale.getDefault()).format(System.currentTimeMillis())
 
         val mFilePath= Environment.getExternalStorageDirectory().toString()+"/"+mFileName+".pdf"
 

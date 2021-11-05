@@ -53,7 +53,19 @@ class BasvuruDikeyGecis : AppCompatActivity() {
 
     fun clickControl(){
         binding.btnCreatePDF.setOnClickListener {
-            createAlertDialog()
+            getPer()
+        }
+    }
+    fun getPer(){
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                val permission = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                requestPermissions(permission, STORAGE_CODE)
+            } else {
+                savePdf()
+            }
+        }else{
+            savePdf()
         }
     }
     fun createAlertDialog(){
@@ -62,16 +74,7 @@ class BasvuruDikeyGecis : AppCompatActivity() {
         builder.setCancelable(false)
         builder.setMessage("Başvuru tamamlanması için indirilen belgeyi imzalayarak sistemem geri yükleyin.")
         builder.setPositiveButton("Tamam", DialogInterface.OnClickListener { dialog, which ->
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-                    val permission = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    requestPermissions(permission, STORAGE_CODE)
-                } else {
-                    savePdf()
-                }
-            }else{
-                savePdf()
-            }
+
             val intent= Intent(this, FileUploadAct::class.java)
             intent.putExtra("typeData","dikey")
             startActivity(intent)
@@ -138,6 +141,7 @@ class BasvuruDikeyGecis : AppCompatActivity() {
             mDoc.add(paragraph4)
             mDoc.close()
             Toast.makeText(this, "$mFileName.pdf içine oluşturuldu $mFilePath", Toast.LENGTH_SHORT).show()
+            createAlertDialog()
 
 
         }catch (e: Exception){

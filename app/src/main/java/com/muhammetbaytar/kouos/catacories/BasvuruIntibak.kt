@@ -48,10 +48,21 @@ class BasvuruIntibak : AppCompatActivity() {
         clickControl()
         getFireStoreData()
     }
+    fun getPer(){
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                val permission = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                requestPermissions(permission, STORAGE_CODE)
+            } else {
+                savePdf()
+            }
+        }else{
+            savePdf()
+        }
+    }
     fun clickControl(){
         binding.buttonCrtPdf.setOnClickListener {
-            createAlertDialog()
-        }
+        getPer()}
     }
 
     fun createAlertDialog(){
@@ -60,16 +71,7 @@ class BasvuruIntibak : AppCompatActivity() {
         builder.setCancelable(false)
         builder.setMessage("Başvuru tamamlanması için indirilen belgeyi imzalayarak sistemem geri yükleyin.")
         builder.setPositiveButton("Tamam", DialogInterface.OnClickListener { dialog, which ->
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-                    val permission = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    requestPermissions(permission, STORAGE_CODE)
-                } else {
-                    savePdf()
-                }
-            }else{
-                savePdf()
-            }
+
             val intent= Intent(this, FileUploadAct::class.java)
             intent.putExtra("typeData","intibak")
             startActivity(intent)
@@ -135,6 +137,7 @@ class BasvuruIntibak : AppCompatActivity() {
             mDoc.add(paragraph4)
             mDoc.close()
             Toast.makeText(this, "$mFileName.pdf içine oluşturuldu $mFilePath", Toast.LENGTH_SHORT).show()
+            createAlertDialog()
 
 
         }catch (e: Exception){

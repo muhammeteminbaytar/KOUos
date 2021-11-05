@@ -60,16 +60,23 @@ class LoginScreen : AppCompatActivity() {
         var mail = binding.txtEmail.text.toString()
         var pass = binding.txtPass.text.toString()
 
-        if (mail.isEmpty() || pass.isEmpty()) {
-            Toast.makeText(this, "Email ve Şifre eksiksiz girilmelidir !", Toast.LENGTH_LONG).show()
-        } else {
-            auth.signInWithEmailAndPassword(mail, pass).addOnSuccessListener {
-                saverSharedPreferences()
-                var intent = Intent(this, CatacoriesScreen::class.java)
-                startActivity(intent)
-            }.addOnFailureListener {
-                //giriş hatası olunca çalışır.
-                Toast.makeText(this, it.localizedMessage.toString(), Toast.LENGTH_LONG).show()
+        if (mail=="Admin"&&pass=="Admin"){
+            var intent = Intent(this, AdminPanelAct::class.java)
+            startActivity(intent)
+        }else {
+
+            if (mail.isEmpty() || pass.isEmpty()) {
+                Toast.makeText(this, "Email ve Şifre eksiksiz girilmelidir !", Toast.LENGTH_LONG)
+                    .show()
+            } else {
+                auth.signInWithEmailAndPassword(mail, pass).addOnSuccessListener {
+                    saverSharedPreferences()
+                    var intent = Intent(this, CatacoriesScreen::class.java)
+                    startActivity(intent)
+                }.addOnFailureListener {
+                    //giriş hatası olunca çalışır.
+                    Toast.makeText(this, it.localizedMessage.toString(), Toast.LENGTH_LONG).show()
+                }
             }
         }
     }

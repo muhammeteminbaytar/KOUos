@@ -27,71 +27,84 @@ import java.io.FileOutputStream
 import java.util.*
 
 class BasvuruYatayGecis : AppCompatActivity() {
-    lateinit var binding:ActivityBasvuruYatayGecisBinding
+    lateinit var binding: ActivityBasvuruYatayGecisBinding
 
-    lateinit var ogrenciAd:String
-    lateinit var ogrenciNo:String
-    lateinit var ogrenciAdres:String
-    lateinit var ogrenciTelNo:String
-    lateinit var bolum:String
-    lateinit var fakulte:String
-    lateinit var adres:String
-    lateinit var kimlikNo:String
-    lateinit var dTatihi:String
-    lateinit var sinif:String
+    lateinit var ogrenciAd: String
+    lateinit var ogrenciNo: String
+    lateinit var ogrenciAdres: String
+    lateinit var ogrenciTelNo: String
+    lateinit var bolum: String
+    lateinit var fakulte: String
+    lateinit var adres: String
+    lateinit var kimlikNo: String
+    lateinit var dTatihi: String
+    lateinit var sinif: String
 
     private var STORAGE_CODE = 1001
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.title="Yatay Geçiş Başvuru"
-        binding= ActivityBasvuruYatayGecisBinding.inflate(layoutInflater)
-        val view=binding.root
+        this.title = "Yatay Geçiş Başvuru"
+        binding = ActivityBasvuruYatayGecisBinding.inflate(layoutInflater)
+        val view = binding.root
         setContentView(view)
 
         clickControl()
         getFireStoreData()
     }
-    fun clickControl(){
-            val basvuruTuru= arrayOf("Kurum ici yatay gecis basvurusu","Kurumlar arasi yatay gecis basvurusu"
-                ,"Mer. Yer. Puaniyla yatay gecis basvurusu","Yurt disi yatay gecis basvurusu")
 
-            val arrayAdapter = ArrayAdapter(this, R.layout.uni_dropdown_item, basvuruTuru)
-            binding.uniAutoComplete.setAdapter(arrayAdapter)
+    fun clickControl() {
+        val basvuruTuru = arrayOf(
+            "Kurum ici yatay gecis basvurusu",
+            "Kurumlar arasi yatay gecis basvurusu",
+            "Mer. Yer. Puaniyla yatay gecis basvurusu",
+            "Yurt disi yatay gecis basvurusu"
+        )
+
+        val arrayAdapter = ArrayAdapter(this, R.layout.uni_dropdown_item, basvuruTuru)
+        binding.uniAutoComplete.setAdapter(arrayAdapter)
 
         binding.btnCreatePdf.setOnClickListener {
-            createAlertDialog()
+getPer()        }
+    }
+    fun getPer(){
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                val permission = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                requestPermissions(permission, STORAGE_CODE)
+            } else {
+                savePdf()
+            }
+        }else{
+            savePdf()
         }
     }
-    fun createAlertDialog(){
+
+    fun createAlertDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Bilgilendirme")
         builder.setCancelable(false)
         builder.setMessage("Başvuru tamamlanması için indirilen belgeyi imzalayarak sistemem geri yükleyin.")
         builder.setPositiveButton("Tamam", DialogInterface.OnClickListener { dialog, which ->
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-                    val permission = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    requestPermissions(permission, STORAGE_CODE)
-                } else {
-                    savePdf()
-                }
-            }else{
-                savePdf()
-            }
-            val intent= Intent(this, FileUploadAct::class.java)
-            intent.putExtra("typeData","yatay")
+
+            val intent = Intent(this, FileUploadAct::class.java)
+            intent.putExtra("typeData", "yatay")
             startActivity(intent)
         })
         builder.show()
 
     }
-    fun savePdf(){
-        val mDoc= Document()
-        val mFileName= SimpleDateFormat("yyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis())
 
-        val mFilePath= Environment.getExternalStorageDirectory().toString()+"/"+mFileName+".pdf"
+    fun savePdf() {
+        val mDoc = Document()
+        val mFileName = SimpleDateFormat(
+            "yyyMMdd_HHmmss",
+            Locale.getDefault()
+        ).format(System.currentTimeMillis())
+
+        val mFilePath =
+            Environment.getExternalStorageDirectory().toString() + "/" + mFileName + ".pdf"
 
         try {
 
@@ -99,14 +112,14 @@ class BasvuruYatayGecis : AppCompatActivity() {
             mDoc.open()
 
 
-            var giris="T.C.\n" +
+            var giris = "T.C.\n" +
                     "KOCAELI ÜNIVERSITESI\n" +
                     "YATAY GECIS BASVURU FORMU\n"
 
-            val ikinciGiris="\n\nAdi ve Soyadi : $ogrenciAd \n" +
+            val ikinciGiris = "\n\nAdi ve Soyadi : $ogrenciAd \n" +
                     "Ögrenci No : $ogrenciNo \n" +
-                    "Bölümü : $bolum \n"  +
-                    "Cep Telefon No : $ogrenciTelNo \n"+
+                    "Bölümü : $bolum \n" +
+                    "Cep Telefon No : $ogrenciTelNo \n" +
                     "E-posta Adresi : ${FirebaseAuth.getInstance().currentUser?.email.toString()} \n" +
                     "Adresi : $ogrenciAdres \n" +
                     "TC Kimlik No : $kimlikNo \n" +
@@ -129,33 +142,41 @@ class BasvuruYatayGecis : AppCompatActivity() {
                     ""
 
 
-
-            val dorduncuGiris="\n\n Adayin Adi Soyadi : $ogrenciAd \n " +
+            val dorduncuGiris = "\n\n Adayin Adi Soyadi : $ogrenciAd \n " +
                     "IMZASI "
 
 
             mDoc.addAuthor("MyTeam")
 
-            val paragraph= Paragraph(giris,
-                FontFactory.getFont(FontFactory.TIMES_BOLD, BaseFont.CP1252, BaseFont.EMBEDDED))
-            val paragraph2= Paragraph(ikinciGiris,
-                FontFactory.getFont(FontFactory.TIMES, BaseFont.CP1252, BaseFont.EMBEDDED))
-            val paragraph4= Paragraph(dorduncuGiris,
-                FontFactory.getFont(FontFactory.TIMES, BaseFont.CP1252, BaseFont.EMBEDDED))
-            paragraph.alignment= Element.ALIGN_CENTER
-            paragraph2.alignment= Element.ALIGN_LEFT
-            paragraph4.alignment= Element.ALIGN_RIGHT
+            val paragraph = Paragraph(
+                giris,
+                FontFactory.getFont(FontFactory.TIMES_BOLD, BaseFont.CP1252, BaseFont.EMBEDDED)
+            )
+            val paragraph2 = Paragraph(
+                ikinciGiris,
+                FontFactory.getFont(FontFactory.TIMES, BaseFont.CP1252, BaseFont.EMBEDDED)
+            )
+            val paragraph4 = Paragraph(
+                dorduncuGiris,
+                FontFactory.getFont(FontFactory.TIMES, BaseFont.CP1252, BaseFont.EMBEDDED)
+            )
+            paragraph.alignment = Element.ALIGN_CENTER
+            paragraph2.alignment = Element.ALIGN_LEFT
+            paragraph4.alignment = Element.ALIGN_RIGHT
             mDoc.add(paragraph)
             mDoc.add(paragraph2)
             mDoc.add(paragraph4)
             mDoc.close()
-            Toast.makeText(this, "$mFileName.pdf içine oluşturuldu $mFilePath", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "$mFileName.pdf içine oluşturuldu $mFilePath", Toast.LENGTH_SHORT)
+                .show()
+            createAlertDialog()
 
 
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Toast.makeText(this, "" + e.toString(), Toast.LENGTH_SHORT).show()
         }
     }
+
     fun getFireStoreData() {
         val auth = FirebaseAuth.getInstance()
         val db = FirebaseFirestore.getInstance()
@@ -168,16 +189,16 @@ class BasvuruYatayGecis : AppCompatActivity() {
                     if (value != null) {
                         for (document in value.documents) {
                             //println(document.get("userAdSoyad").toString())
-                            ogrenciAd=document.get("userAdSoyad").toString()
-                            ogrenciNo=document.get("userOgrenciNo").toString()
-                            ogrenciAdres=document.get("userAdres").toString()
-                            ogrenciTelNo=document.get("userTel").toString()
-                            bolum=document.get("userDep").toString()
-                            fakulte=document.get("userFak").toString()
-                            adres=document.get("userAdres").toString()
-                            kimlikNo=document.get("userKimlikNo").toString()
-                            dTatihi=document.get("userDtarih").toString()
-                            sinif=document.get("userSinif").toString()
+                            ogrenciAd = document.get("userAdSoyad").toString()
+                            ogrenciNo = document.get("userOgrenciNo").toString()
+                            ogrenciAdres = document.get("userAdres").toString()
+                            ogrenciTelNo = document.get("userTel").toString()
+                            bolum = document.get("userDep").toString()
+                            fakulte = document.get("userFak").toString()
+                            adres = document.get("userAdres").toString()
+                            kimlikNo = document.get("userKimlikNo").toString()
+                            dTatihi = document.get("userDtarih").toString()
+                            sinif = document.get("userSinif").toString()
                         }
                     }
                 }
@@ -190,7 +211,7 @@ class BasvuruYatayGecis : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode){
+        when (requestCode) {
             STORAGE_CODE -> {
                 if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     savePdf()

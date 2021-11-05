@@ -69,10 +69,22 @@ class BasvuruYazOkulu : AppCompatActivity() {
                 }
             }
     }
+    fun getPer(){
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                val permission = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                requestPermissions(permission, STORAGE_CODE)
+            } else {
+                savePdf()
+            }
+        }else{
+            savePdf()
+        }
+    }
 
     fun clickControl() {
         binding.btnCrtPdf.setOnClickListener {
-            createAlertDialog()
+            getPer()
         }
     }
     fun createAlertDialog(){
@@ -81,16 +93,7 @@ class BasvuruYazOkulu : AppCompatActivity() {
         builder.setCancelable(false)
         builder.setMessage("Başvuru tamamlanması için indirilen belgeyi imzalayarak sistemem geri yükleyin.")
         builder.setPositiveButton("Tamam", DialogInterface.OnClickListener { dialog, which ->
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-                    val permission = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    requestPermissions(permission, STORAGE_CODE)
-                } else {
-                    savePdf()
-                }
-            }else{
-                savePdf()
-            }
+
             val intent=Intent(this,FileUploadAct::class.java)
             intent.putExtra("typeData","yazokulu")
             startActivity(intent)
@@ -154,6 +157,7 @@ class BasvuruYazOkulu : AppCompatActivity() {
             mDoc.add(paragraph4)
             mDoc.close()
             Toast.makeText(this, "$mFileName.pdf içine oluşturuldu $mFilePath", Toast.LENGTH_LONG).show()
+            createAlertDialog()
 
 
         }catch (e: Exception){

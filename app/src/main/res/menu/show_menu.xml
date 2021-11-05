@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item
+    android:id="@+id/txtonay"
+    android:title="Onayla"
+    android:icon="@drawable/ic_onay"/>
+    <item
+        android:id="@+id/txtret"
+        android:title="Reddet"
+        android:icon="@drawable/ic_ret"/>
+</menu>

@@ -226,6 +226,7 @@ class RegisterScreen : AppCompatActivity() {
         userMap.put("userDep", binding.depAutoComplete.text.toString())
 
         db.collection("Users").add(userMap).addOnCompleteListener { task ->
+
         }.addOnFailureListener { exception ->
             Toast.makeText(
                 applicationContext,

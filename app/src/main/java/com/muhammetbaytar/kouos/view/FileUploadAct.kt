@@ -1,6 +1,7 @@
 package com.muhammetbaytar.kouos.view
 
 import android.content.Intent
+import android.graphics.Color
 import android.icu.text.SimpleDateFormat
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -23,11 +24,10 @@ class FileUploadAct : AppCompatActivity() {
 
     lateinit var binding: ActivityFileUploadBinding
     lateinit var typeUpload: String
-    lateinit var uri:Uri
-    lateinit var mStorage:StorageReference
-
+    lateinit var uri: Uri
     lateinit var ogrenciAd: String
     lateinit var ogrenciNo: String
+    var belgeTipi = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,30 +43,35 @@ class FileUploadAct : AppCompatActivity() {
         createIntent()
         clickControl()
     }
-    fun clickControl(){
+
+    fun clickControl() {
         binding.imgBasvurubelge.setOnClickListener {
-            val intent=Intent()
+            val intent = Intent()
             intent.type = "application/pdf"
             intent.action = Intent.ACTION_GET_CONTENT
-            startActivityForResult(Intent.createChooser(intent,"Başvuru Belgesi Seçin"),0)
+            startActivityForResult(Intent.createChooser(intent, "Başvuru Belgesi Seçin"), 0)
+            belgeTipi = 0
+        }
+        binding.imgTranskript.setOnClickListener {
+            val intent = Intent()
+            intent.type = "application/*"
+            intent.action = Intent.ACTION_GET_CONTENT
+            startActivityForResult(Intent.createChooser(intent, "Transkript Belgesi Seçin"), 0)
+            belgeTipi = 1
         }
         binding.btnBasvuruolustur.setOnClickListener {
             uploadFirease("")
             uploadFirease("Transkript_")
-        }
 
-        binding.imgTranskript.setOnClickListener {
-            val intent=Intent()
-            intent.type = "application/*"
-            intent.action = Intent.ACTION_GET_CONTENT
-            startActivityForResult(Intent.createChooser(intent,"Başvuru Belgesi Seçin"),0)
+            saveBasvuruFirebase()
         }
     }
-    fun viewControl(){
+
+    fun viewControl() {
         println(typeUpload)
-        if(typeUpload=="intibak"||typeUpload=="cap"){
-            binding.imgTranskript.visibility=View.VISIBLE
-            binding.txtTranskriptbelge.visibility=View.VISIBLE
+        if (typeUpload == "intibak" || typeUpload == "cap") {
+            binding.imgTranskript.visibility = View.VISIBLE
+            binding.txtTranskriptbelge.visibility = View.VISIBLE
         }
     }
 
@@ -76,29 +81,41 @@ class FileUploadAct : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode== RESULT_OK){
-            if(requestCode==0){
-                uri= data?.data!!
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 0) {
+                uri = data?.data!!
+                if (belgeTipi == 0) {
+                    binding.txtBasvurubelge.text = "Başvuru Belgesi Seçildi"
+                    binding.txtBasvurubelge.setTextColor(Color.rgb(0, 100, 0))
+                } else {
+                    binding.txtTranskriptbelge.text = "Transkript Belgesi Seçildi"
+                    binding.txtTranskriptbelge.setTextColor(Color.rgb(0, 100, 0))
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
-    fun uploadFirease(docName : String){
-        val storage= Firebase.storage
+
+    fun uploadFirease(docName: String) {
+        val storage = Firebase.storage
         val reference = storage.reference
-        var fileName= docName+ogrenciNo+"_"+ogrenciAd+"_"+ SimpleDateFormat("yyyMMddHHmm", Locale.getDefault()).format(System.currentTimeMillis())
-        var pImageReference=reference.child("Basvuru").child("$fileName.pdf")
-        if (docName != ""){
-             pImageReference=reference.child("Transkript").child("$fileName.pdf")
+        var fileName = docName + ogrenciNo + "_" + ogrenciAd + "_" + SimpleDateFormat(
+            "yyyMMddHHmm",
+            Locale.getDefault()
+        ).format(System.currentTimeMillis())
+        var pImageReference = reference.child("Basvuru").child("$fileName.pdf")
+        if (docName != "") {
+            pImageReference = reference.child("Transkript").child("$fileName.pdf")
         }
-        if (uri!= null){
+        if (uri != null) {
             pImageReference.putFile(uri).addOnSuccessListener {
                 Toast.makeText(this, "Basarılı", Toast.LENGTH_SHORT).show()
-            }.addOnFailureListener{
+            }.addOnFailureListener {
                 println(it.localizedMessage.toString())
             }
         }
     }
+
     fun getFireStoreData() {
         val auth = FirebaseAuth.getInstance()
         val db = FirebaseFirestore.getInstance()
@@ -110,14 +127,28 @@ class FileUploadAct : AppCompatActivity() {
                 } else {
                     if (value != null) {
                         for (document in value.documents) {
-                            //println(document.get("userAdSoyad").toString())
-                            ogrenciAd=document.get("userAdSoyad").toString()
-                            ogrenciNo=document.get("userOgrenciNo").toString()
+                            ogrenciAd = document.get("userAdSoyad").toString()
+                            ogrenciNo = document.get("userOgrenciNo").toString()
                         }
                     }
                 }
             }
     }
 
-
+    fun saveBasvuruFirebase() {
+        val basvuruMap = hashMapOf<String, Any>()
+        Firebase.auth.currentUser?.let { basvuruMap.put("userId", it.uid) }
+        basvuruMap.put("basvuruTuru", typeUpload)
+        basvuruMap.put("basvuruDurumu", 0)
+        FirebaseFirestore.getInstance().collection("Basvurular").add(basvuruMap)
+            .addOnCompleteListener {
+                
+            }.addOnFailureListener {
+            Toast.makeText(
+                applicationContext,
+                it.localizedMessage.toString(),
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
 }

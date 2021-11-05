@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.AdminPanelAct">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_basvurudurum"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:foregroundGravity="center"
+        android:hint="Durum"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:scrollbarSize="25dp"
+        app:helperTextTextColor="#CC2828"
+        app:hintTextAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_constraintEnd_toStartOf="@+id/divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:passwordToggleTint="#717171"
+        app:startIconDrawable="@drawable/ic_info">
+
+        <AutoCompleteTextView
+            android:id="@+id/basvurudurum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="15"
+            android:inputType="none"
+            android:paddingStart="12dp"
+            android:paddingEnd="4dp"
+            android:text="Gelen"
+            android:textAlignment="textStart"
+            android:textColorHint="#717171"
+            android:textSize="18sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_basvuruturu"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:foregroundGravity="center"
+        android:hint="Türü"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:scrollbarSize="25dp"
+        app:helperTextTextColor="#CC2828"
+        app:hintTextAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/divider"
+        app:layout_constraintTop_toTopOf="parent"
+        app:passwordToggleTint="#717171"
+        app:startIconDrawable="@drawable/ic_dep">
+
+        <AutoCompleteTextView
+            android:id="@+id/basvuruturu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="15"
+            android:inputType="none"
+            android:paddingStart="4dp"
+            android:paddingEnd="12dp"
+            android:textAlignment="textStart"
+            android:textColorHint="#717171"
+            android:textSize="18sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:background="?android:attr/listDivider"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/text_basvurudurum"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/text_basvurudurum" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
+</androidx.constraintlayout.widget.ConstraintLayout>

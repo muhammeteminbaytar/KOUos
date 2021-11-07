@@ -117,7 +117,7 @@ class AdminPanelAct : AppCompatActivity() {
         } else {
 
             println(filtreKayitTuru)
-            db.collection("Basvurular").whereEqualTo("basvuruTuru", filtreKayitTuru)
+            db.collection("Basvurular").whereEqualTo("basvuruDurumu", filtreKayitDurum).whereEqualTo("basvuruTuru", filtreKayitTuru)
                 .addSnapshotListener { value, error ->
                     if (error == null) {
                         if (value != null) {

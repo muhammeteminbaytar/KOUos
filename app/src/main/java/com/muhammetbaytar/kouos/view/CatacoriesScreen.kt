@@ -44,6 +44,10 @@ class CatacoriesScreen : AppCompatActivity() {
             var intent=Intent(this,BasvuruIntibak::class.java)
             startActivity(intent)
         }
+        binding.btnBasvurularim.setOnClickListener {
+            var intent=Intent(this,ProfilAct::class.java)
+            startActivity(intent)
+        }
 
         /*
         hesaptan çıkış kodu

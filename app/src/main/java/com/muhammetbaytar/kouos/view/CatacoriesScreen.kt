@@ -49,14 +49,5 @@ class CatacoriesScreen : AppCompatActivity() {
             startActivity(intent)
         }
 
-        /*
-        hesaptan çıkış kodu
-        binding.button.setOnClickListener {
-            auth= Firebase.auth
-            auth.signOut()
-            var intent= Intent(this,LoginScreen::class.java)
-            startActivity(intent)
-            finish()
-        }*/
     }
 }

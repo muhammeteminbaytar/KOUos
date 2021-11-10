@@ -1,12 +1,17 @@
 package com.muhammetbaytar.kouos.view
 
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.muhammetbaytar.kouos.R
 import com.muhammetbaytar.kouos.adapters.RecylerAdapter
 import com.muhammetbaytar.kouos.databinding.ActivityAdminPanelBinding
@@ -18,11 +23,13 @@ class AdminPanelAct : AppCompatActivity() {
     var sendNameArrayList = arrayListOf<String>()
     var sendNoArrayList = arrayListOf<String>()
     var sendDocumentIdList = arrayListOf<String>()
+    var sendProfileList= arrayListOf<String>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.title = "Admin Panel"
+        supportActionBar?.hide()
+
         binding = ActivityAdminPanelBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
@@ -31,6 +38,7 @@ class AdminPanelAct : AppCompatActivity() {
         //getFirebaseData()
         recylerCreater()
         getFirebaseData()
+        //gelAllImage()
     }
 
     fun recylerCreater() {
@@ -63,6 +71,7 @@ class AdminPanelAct : AppCompatActivity() {
 
     }
 
+
     fun dropdownfuller() {
         val basvuruDurumu = arrayOf("Gelen", "Kabul", "Ret")
         val arrayAdapter = ArrayAdapter(this, R.layout.uni_dropdown_item, basvuruDurumu)
@@ -78,6 +87,7 @@ class AdminPanelAct : AppCompatActivity() {
         sendNoArrayList.clear()
         sendNameArrayList.clear()
         sendDocumentIdList.clear()
+        sendProfileList.clear()
         val db = FirebaseFirestore.getInstance()
 
         if (filtreKayitTuru == "") {
@@ -91,6 +101,8 @@ class AdminPanelAct : AppCompatActivity() {
                             for (document in value.documents) {
 
                                 sendDocumentIdList.add(document.id)
+                                sendProfileList.add(document.get("userId").toString())
+                                println(document.get("userId").toString())
 
                                 db.collection("Users")
                                     .whereEqualTo("userId", document.get("userId"))
@@ -104,7 +116,8 @@ class AdminPanelAct : AppCompatActivity() {
                                                     this,
                                                     sendNameArrayList,
                                                     sendNoArrayList,
-                                                    sendDocumentIdList
+                                                    sendDocumentIdList,
+                                                    sendProfileList
                                                 )
                                             }
                                         }
@@ -123,6 +136,8 @@ class AdminPanelAct : AppCompatActivity() {
                         if (value != null) {
                             for (document in value.documents) {
                                 sendDocumentIdList.add(document.id)
+                                sendProfileList.add(document.get("userId").toString())
+
                                 db.collection("Users")
                                     .whereEqualTo("userId", document.get("userId"))
                                     .addSnapshotListener { value, error ->
@@ -139,7 +154,7 @@ class AdminPanelAct : AppCompatActivity() {
                                                     this,
                                                     sendNameArrayList,
                                                     sendNoArrayList,
-                                                    sendDocumentIdList
+                                                    sendDocumentIdList,sendProfileList
                                                 )
                                             }
                                         }

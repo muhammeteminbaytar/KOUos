@@ -7,40 +7,50 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.muhammetbaytar.kouos.R
 import com.muhammetbaytar.kouos.view.AdminPanelAct
 
-class RecylerAdapter(val c:Context,val basvuruNameList: MutableList<String>,val basvuruNoList : MutableList<String>,val basvuruIdList:MutableList<String>):RecyclerView.Adapter<ViewHolder>() {
+class RecylerAdapter(val c:Context,val basvuruNameList: MutableList<String>,val basvuruNoList : MutableList<String>,val basvuruIdList:MutableList<String>,val idlist:MutableList<String>):RecyclerView.Adapter<ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v=LayoutInflater.from(parent.context).inflate(R.layout.card_layout,parent,false)
-        return ViewHolder(v,c,basvuruIdList)
+        return ViewHolder(v,c,basvuruIdList,basvuruIdList)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             holder.itemView.findViewById<TextView>(R.id.txt_kuladı).text=basvuruNameList[position]
             holder.itemView.findViewById<TextView>(R.id.txt_kulno).text=basvuruNoList[position]
-            holder.itemView.findViewById<TextView>(R.id.txt_basıd).text=basvuruIdList[position]
-
-
+            holder.itemView.findViewById<ImageView>(R.id.img_profile)
+            gelAllImage(idlist[position],holder)
+            //holder.itemView.findViewById<TextView>(R.id.txt_basıd).text=basvuruIdList[position]
 
     }
+    fun gelAllImage(id:String,holder: ViewHolder){
+        var imageRef= Firebase.storage.reference.child("Profiles/$id.jpg")
+        imageRef.downloadUrl.addOnSuccessListener {
+            val imageUri=it.toString()
+            var imageTest=holder.itemView.findViewById<ImageView>(R.id.img_profile)
+            Glide.with(c).load(imageUri).into(imageTest)
+        }
 
+    }
     override fun getItemCount(): Int {
             return basvuruNameList.size
     }
 
 }
-class ViewHolder(itemView: View,c:Context,basvuruNameList: MutableList<String>):RecyclerView.ViewHolder(itemView){
+class ViewHolder(itemView: View,c:Context,basvuruIdList: MutableList<String>,docIdList: MutableList<String>):RecyclerView.ViewHolder(itemView){
     init {
         itemView.setOnClickListener {
 
         }
         itemView.findViewById<ImageView>(R.id.mMenu).setOnClickListener {
-            popMenus(it,c,basvuruNameList)
+            popMenus(it,c,basvuruIdList)
         }
 
     }

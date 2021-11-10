@@ -1,5 +1,6 @@
 package com.muhammetbaytar.kouos.view
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.icu.text.SimpleDateFormat
@@ -13,11 +14,10 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
+
 import com.google.firebase.storage.ktx.storage
 import com.muhammetbaytar.kouos.databinding.ActivityFileUploadBinding
+import com.muhammetbaytar.kouos.widget.CustomLoadDialog
 import java.util.*
 
 class FileUploadAct : AppCompatActivity() {
@@ -27,8 +27,10 @@ class FileUploadAct : AppCompatActivity() {
     lateinit var uri: Uri
     lateinit var ogrenciAd: String
     lateinit var ogrenciNo: String
+    lateinit var belgeId:String
     var belgeTipi = 0
 
+    val loadDialog = CustomLoadDialog()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,8 +62,10 @@ class FileUploadAct : AppCompatActivity() {
             belgeTipi = 1
         }
         binding.btnBasvuruolustur.setOnClickListener {
-            uploadFirease("")
-            uploadFirease("Transkript_")
+            uploadFirease("",true)
+            uploadFirease("Transkript_",false)
+            loadDialog.createLoadDialog(this)
+
 
             saveBasvuruFirebase()
         }
@@ -71,7 +75,7 @@ class FileUploadAct : AppCompatActivity() {
         println(typeUpload)
         if (typeUpload == "intibak" || typeUpload == "cap") {
             binding.imgTranskript.visibility = View.VISIBLE
-            binding.txtTranskriptbelge.visibility = View.VISIBLE
+
         }
     }
 
@@ -80,23 +84,26 @@ class FileUploadAct : AppCompatActivity() {
         viewControl()
     }
 
+    @SuppressLint("ResourceType")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == RESULT_OK) {
             if (requestCode == 0) {
                 uri = data?.data!!
                 if (belgeTipi == 0) {
                     binding.txtBasvurubelge.text = "Başvuru Belgesi Seçildi"
-                    binding.txtBasvurubelge.setTextColor(Color.rgb(0, 100, 0))
+                    binding.txtBasvurubelge.setTextColor(Color.BLACK)
+                    binding.cons1.setBackgroundColor(Color.rgb(116,181,111))
                 } else {
                     binding.txtTranskriptbelge.text = "Transkript Belgesi Seçildi"
-                    binding.txtTranskriptbelge.setTextColor(Color.rgb(0, 100, 0))
+                    binding.txtTranskriptbelge.setTextColor(Color.BLACK)
+                    binding.cons2.setBackgroundColor(Color.rgb(116,181,111))
                 }
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    fun uploadFirease(docName: String) {
+    fun uploadFirease(docName: String,runner:Boolean) {
         val storage = Firebase.storage
         val reference = storage.reference
         var fileName = docName + ogrenciNo + "_" + ogrenciAd + "_" + SimpleDateFormat(
@@ -104,13 +111,21 @@ class FileUploadAct : AppCompatActivity() {
             Locale.getDefault()
         ).format(System.currentTimeMillis())
         var pImageReference = reference.child("Basvuru").child("$fileName.pdf")
+        belgeId=pImageReference.downloadUrl.toString()
         if (docName != "") {
             pImageReference = reference.child("Transkript").child("$fileName.pdf")
         }
         if (uri != null) {
             pImageReference.putFile(uri).addOnSuccessListener {
-                Toast.makeText(this, "Basarılı", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Başvuru Başarılı", Toast.LENGTH_SHORT).show()
+                loadDialog.cancelLoadDialog()
+                if (runner){
+                    val intent=Intent(this,CatacoriesScreen::class.java)
+                    startActivity(intent)
+                    finish()
+                }
             }.addOnFailureListener {
+                loadDialog.cancelLoadDialog()
                 println(it.localizedMessage.toString())
             }
         }
@@ -140,6 +155,7 @@ class FileUploadAct : AppCompatActivity() {
         Firebase.auth.currentUser?.let { basvuruMap.put("userId", it.uid) }
         basvuruMap.put("basvuruTuru", typeUpload)
         basvuruMap.put("basvuruDurumu", 0)
+        basvuruMap.put("pdfDowlandId",belgeId)
         FirebaseFirestore.getInstance().collection("Basvurular").add(basvuruMap)
             .addOnCompleteListener {
                 
